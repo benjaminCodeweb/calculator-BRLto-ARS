@@ -14,9 +14,15 @@ function App() {
 
   
   useEffect(() => {
-     const range = br * 290;
+    let range = 0;
+    const value = Number.isFinite(br) ? br : 0;
+     if(from === 'brasil') {
+       range = value * 290;
+     } else {
+        range = value * 0.0045 
+     }
      setCant(range)
-  },[br]);
+  },[br,from,to]);
 
   const swap = () => {
     setFrom(to);
@@ -33,7 +39,7 @@ function App() {
   <span >Cantidad</span>
   <br />
 
-    <input type="number" value={br} style={{backgroundImage: `url(${from === 'brasil' ? brasilBandera : argentinaBandera})`, backgroundRepeat: 'no-repeat', backgroundSize: '40px 28px', backgroundPosition: "8px center",  paddingLeft: "50px",   // espacio para que no pise el texto
+    <input type="number" value={Number.isFinite(br) ? br : 0} style={{backgroundImage: `url(${from === 'brasil' ? brasilBandera : argentinaBandera})`, backgroundRepeat: 'no-repeat', backgroundSize: '40px 28px', backgroundPosition: "8px center",  paddingLeft: "50px",   // espacio para que no pise el texto
     height: "40px"}}  onChange={e => setBr(e.target.valueAsNumber)} className="form-control"  aria-label="Dollar amount (with dot and two decimal places)"/>
 
 </div>
