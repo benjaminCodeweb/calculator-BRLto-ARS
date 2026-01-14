@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import './App.css'
 import argentinaBandera from '../src/assets/argPng.png'
 import brasilBandera from '../src/assets/brasilPng.png'
+import axios from 'axios';
 function App() {
 
   const[br, setBr] = useState<number>(0);
@@ -14,14 +15,23 @@ function App() {
 
   
   useEffect(() => {
-    let range = 0;
-    const value = Number.isFinite(br) ? br : 0;
-     if(from === 'brasil') {
-       range = value * 290;
-     } else {
-        range = value * 0.0045 
-     }
-     setCant(range)
+  
+    
+     const fetchRange = async() => {
+      const value = Number.isFinite(br) ? br : 0;
+      const base = from === 'brasil' ? 'BRL' : 'ARS';
+      const target = to === 'brasil' ? 'BRL' : 'ARS';
+
+      const resp = await axios.get(`https://open.er-api.com/v6/latest/${base}`);
+      const rate = resp.data.rates[target];
+
+      setCant(Number((value * rate).toFixed(2)));
+      
+    };
+
+    fetchRange();
+  
+  
   },[br,from,to]);
 
   const swap = () => {
@@ -32,7 +42,7 @@ function App() {
 
   return (
     <>
-    <div>
+    <div className='card'>
       <h2>Conversor</h2>
   <div className="input-group mb-3">
   
